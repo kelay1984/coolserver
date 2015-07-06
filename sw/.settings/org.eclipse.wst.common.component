@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+<?xml version="1.0" encoding="UTF-8"?>
+<project-modules id="moduleCoreId" project-version="1.5.0">
     <wb-module deploy-name="coolserver">
-        <wb-resource deploy-path="/" source-path="/WebRoot"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
-        <property name="context-root" value="/sw"/>
+        <wb-resource deploy-path="/" source-path="/WebRoot"/>
         <property name="java-output-path" value="/coolserver/WebRoot/WEB-INF/classes"/>
+        <property name="context-root" value="coolserver"/>
     </wb-module>
 </project-modules>
