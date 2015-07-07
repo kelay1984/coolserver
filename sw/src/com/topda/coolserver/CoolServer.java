@@ -10,9 +10,10 @@ public class CoolServer implements Observer{
 	public void init(Incubator inc){
 		inc.addObserver(this);
 	}
-	@Override
-	public void update(Observable observable, Object obj) {
-		 System.out.println("Data has changed to" + (String)obj);    
+
+	public void update(Observable o, Object arg) {
+		System.out.println("Data has changed to" + (String)arg);  
+		
 	}
 
 }
