@@ -7,33 +7,46 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 	<head>
-		<%-- <base href="<%=basePath%>"> --%>
-		<!-- 引入已经压缩的js文件 -->
-	 <script type="text/javascript" src="/js/jquery-2.1.1.js" ></script>  
-<!-- 	 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script> -->
-		<style type="text/css">
-	        .red
-	        {
-	            background-color: Red;
-	        }
-	        .green
-	        {
-	            background-color: Green;
-	        }
-	        .blue
-	        {
-	         background-color: Blue;
-	        }
-    	</style>
-		<title>My JSP 'helloWorld.jsp' starting page</title>
-<script type="text/javascript">
-alert(11);
-//alert($('#olID').val());
-$(document).ready(function(){
-
-	  alert(333);
-	});
-</script>
+	 <script type="text/javascript" src="<%=basePath%>js/jquery-2.1.4.js" ></script>  
+	 <script type="text/javascript" src="<%=basePath%>js/bootstrap.min.js" ></script>  
+	 <link type="text/css" rel="stylesheet" href="<%=basePath%>/css/bootstrap.min.css">
+	 <title>coolserver starting page</title>
+	<script type="text/javascript">
+	$(document).ready(function(){
+		    $('#myTab a:first').tab('show');//初始化显示哪个tab 
+		    
+		    $('#myTab a').click(function (e) { 
+		      e.preventDefault();//阻止a链接的跳转行为 
+		      $(this).tab('show');//显示当前选中的链接及关联的content 
+		    }); 
+		    
+		    $('#initServer').click(function (){
+		    	$.ajax( {   
+		    	    type : "POST",   
+		    	    url : "<%=request.getContextPath()%>/welcome/hello", 
+		    	    data : {
+		    	      'room' : '202',
+		    	      'roomid' :'110'
+		    	     },  
+		    	    dataType: "json",   
+		    	    success : function(data) {   
+		    	        if(data.success){   
+		    	            alert("设置成功！");   
+		    	             
+		    	        }   
+		    	        else{   
+		    	            alert("设置失败！");   
+		    	        }   
+		    	    },   
+		    	    error :function(){   
+		    	        alert("网络连接出错！");   
+		    	    }   
+		    	});   
+		    });
+		});
+	
+	
+	</script>
 
 	</head>
 
@@ -41,14 +54,20 @@ $(document).ready(function(){
 		<h1 class="page-header">
 			Message12 : ${message}
 		</h1>
-		    <form id="form1">
-    <div>
-        <ol id="olID">
-            <li>Sissy.Nong.C</li>
-            <li>农凤新</li>
-            <li>nongfengxin@gmail.com</li>
-        </ol>
-    </div>
-    </form>
+	<ul class="nav nav-tabs" id="myTab"> 
+      <li class="active"><a href="#home">Home</a></li> 
+      <li><a href="#profile">Profile</a></li> 
+      <li><a href="#messages">Messages</a></li> 
+      <li><a href="#settings">Settings</a></li> 
+    </ul> 
+       
+    <div class="tab-content"> 
+      <div class="tab-pane active" id="home">
+      	<button type="button" class="btn btn-success" id="initServer">start</button>
+      </div> 
+      <div class="tab-pane" id="profile">.2..</div> 
+      <div class="tab-pane" id="messages">.3..</div> 
+      <div class="tab-pane" id="settings">..4.</div> 
+    </div> 
 	</body>
 </html>
