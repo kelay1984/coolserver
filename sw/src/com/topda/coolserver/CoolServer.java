@@ -1,19 +1,70 @@
 package com.topda.coolserver;
 
-import java.util.Observable;
-import java.util.Observer;
+import org.springframework.stereotype.Service;
 
+import com.topda.common.SpringContextUtil;
 import com.topda.cooldevice.Incubator;
+import com.topda.cooldevice.MyProtocolHandler;
+import com.topda.event.DataEvent;
+import com.topda.event.DataListener;
 
-public class CoolServer implements Observer{
+@Service
+public class CoolServer {
+	private MyProtocolHandler minaHandler;
 
-	public void init(Incubator inc){
-		inc.addObserver(this);
+	public void registerTemperDataListenr() {
+
+		try {
+			DataListener lis = new DataListener() {
+
+				public void handleEvent(DataEvent de) {
+					Incubator inc = (Incubator) de.getSource();
+
+					System.out.println("coolserver:" + inc.getBoxSn());
+
+				}
+
+			};
+			System.out.println("begin get minaHandler:");
+			minaHandler = (MyProtocolHandler) SpringContextUtil.getBean("minaHandler");
+			System.out.println("minaHandler:" + minaHandler);
+			//
+			if(minaHandler.getDataListener()==null){
+				minaHandler.setDataListener(lis);
+				System.out.println("start succ");
+			}else{
+				System.out.println("already start succ");
+			}
+
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
+	
+	public void removeTemperDataListenr() {
 
-	public void update(Observable o, Object arg) {
-		System.out.println("Data has changed to" + (String)arg);  
-		
+		try {
+			DataListener lis = new DataListener() {
+
+				public void handleEvent(DataEvent de) {
+					Incubator inc = (Incubator) de.getSource();
+
+					System.out.println("coolserver:" + inc.getBoxSn());
+
+				}
+
+			};
+			System.out.println("begin get minaHandler:");
+			minaHandler = (MyProtocolHandler) SpringContextUtil.getBean("minaHandler");
+			System.out.println("minaHandler:" + minaHandler);
+			//
+			minaHandler.setDataListener(null);
+
+			System.out.println("remove succ");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

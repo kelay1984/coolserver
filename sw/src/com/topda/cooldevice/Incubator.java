@@ -5,204 +5,223 @@ import java.util.Observable;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * ±£ÎÂÏäÉè±¸Àà
-* @Title: Incubator.java 
-* @Package com.topda.cooldevice 
-* @Description: TODO(ÓÃÒ»¾ä»°ÃèÊö¸ÃÎÄ¼þ×öÊ²Ã´) 
-* @author wangkl   
-* @date 2015-7-5 ÏÂÎç8:51:21 
-* @version V1.0
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è±¸ï¿½ï¿½
+ * 
+ * @Title: Incubator.java
+ * @Package com.topda.cooldevice
+ * @Description: TODO(ï¿½ï¿½Ò»ï¿½ä»°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½Ê²Ã´)
+ * @author wangkl
+ * @date 2015-7-5 ï¿½ï¿½ï¿½ï¿½8:51:21
+ * @version V1.0
  */
-public class Incubator extends Observable{
+public class Incubator extends Observable {
 
 	private String ip;
 	private String port;
 	/**
-	 * Éè±¸ºÅ
+	 * ï¿½è±¸ï¿½ï¿½
 	 */
 	private String boxSn;
 	/**
-	 * ÎÂ¶È
+	 * ï¿½Â¶ï¿½
 	 */
 	private String temperature;
-	
+
 	/**
-	 * ÎÂ¶È²É¼¯Ê±¼ä
+	 * ï¿½Â¶È²É¼ï¿½Ê±ï¿½ï¿½
 	 */
 	private Date collectTime;
 	/**
-	 * ÊÇ·ñ±¨¾¯
+	 * ï¿½Ç·ñ±¨¾ï¿½
 	 */
 	private boolean isAlarm;
-	
+
 	/**
-	 * ÊÇ·ñ²É¼¯ÏäÍâÎÂ¶È
+	 * ï¿½Ç·ï¿½É¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¶ï¿½
 	 */
 	private boolean isCBOT;
-	
+
 	/**
-	 * ³¬¸ß¾¯·§Öµ
+	 * ï¿½ï¿½ï¿½ß¾ï¿½ï¿½ï¿½Öµ
 	 */
 	private Integer HighAlarmThreshold;
-	
+
 	/**
-	 * ³¬¸ßÏÞ·§Öµ
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½Þ·ï¿½Öµ
 	 */
 	private Integer HighThresholdLimit;
 	/**
-	 * ³¬µÍ¾¯·§Öµ
+	 * ï¿½ï¿½ï¿½Í¾ï¿½ï¿½ï¿½Öµ
 	 */
 	private Integer LowAlarmThreshold;
-	
+
 	/**
-	 * ³¬µÍÏÞ·§Öµ
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½Þ·ï¿½Öµ
 	 */
-	private Integer LowThresholdLimit;	
+	private Integer LowThresholdLimit;
 	/**
-	 * ²É¼¯¼ä¸ô
+	 * ï¿½É¼ï¿½ï¿½ï¿½ï¿½
 	 */
 	private Integer CollectionInterval;
 	/**
-	 * ´æ´¢¼ä¸ô
+	 * ï¿½æ´¢ï¿½ï¿½ï¿½
 	 */
 	private Integer StorageInterval;
 	/**
-	 * ÉÏ´«¼ä¸ô
+	 * ï¿½Ï´ï¿½ï¿½ï¿½ï¿½
 	 */
 	private Integer UploadInterval;
 	/**
-	 * ³¬¾¯ºó´æ´¢¼ä¸ô
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ´¢ï¿½ï¿½ï¿½
 	 */
 	private Integer PostStorageInterval;
 	/**
-	 * ³¬¾¯ºóÉÏ´«¼ä¸ô
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ï¿½ï¿½ï¿½
 	 */
 	private Integer PostUploadInterval;
-	
-	public void init(){
-		
-		if(StringUtils.isEmpty(ip)||StringUtils.isEmpty(port)){
+
+	public void init() {
+
+		if (StringUtils.isEmpty(ip) || StringUtils.isEmpty(port)) {
 			return;
 		}
-		
+
 	}
-	
-   public void change(String newState){
-        System.out.println("Ö÷Ìâ×´Ì¬Îª£º" + newState);
-        setChanged();    
-        
-        //Ö»ÓÐÔÚsetChange()±»µ÷ÓÃºó£¬notifyObservers()²Å»áÈ¥µ÷ÓÃupdate()£¬·ñÔòÊ²Ã´¶¼²»¸É¡£  
-        notifyObservers();
-    }
-	
-   
-   
+
+	public void change(String newState) {
+		System.out.println("ï¿½ï¿½ï¿½ï¿½×´Ì¬Îªï¿½ï¿½" + newState);
+		setChanged();
+
+		// Ö»ï¿½ï¿½ï¿½ï¿½setChange()ï¿½ï¿½ï¿½ï¿½ï¿½Ãºï¿½notifyObservers()ï¿½Å»ï¿½È¥ï¿½ï¿½ï¿½ï¿½update()ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê²Ã´ï¿½ï¿½ï¿½ï¿½ï¿½É¡ï¿½
+		notifyObservers();
+	}
+
 	public String getIp() {
-	return ip;
-}
+		return ip;
+	}
 
-public void setIp(String ip) {
-	this.ip = ip;
-}
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
 
-public String getPort() {
-	return port;
-}
+	public String getPort() {
+		return port;
+	}
 
-public void setPort(String port) {
-	this.port = port;
-}
+	public void setPort(String port) {
+		this.port = port;
+	}
 
-public String getBoxSn() {
-	return boxSn;
-}
+	public String getBoxSn() {
+		return boxSn;
+	}
 
-public void setBoxSn(String boxSn) {
-	this.boxSn = boxSn;
-}
+	public void setBoxSn(String boxSn) {
+		this.boxSn = boxSn;
+	}
 
-public String getTemperature() {
-	return temperature;
-}
+	public String getTemperature() {
+		return temperature;
+	}
 
-public void setTemperature(String temperature) {
-	this.temperature = temperature;
-}
+	public void setTemperature(String temperature) {
+		this.temperature = temperature;
+	}
 
-public Date getCollectTime() {
-	return collectTime;
-}
+	public Date getCollectTime() {
+		return collectTime;
+	}
 
-public void setCollectTime(Date collectTime) {
-	this.collectTime = collectTime;
-}
+	public void setCollectTime(Date collectTime) {
+		this.collectTime = collectTime;
+	}
 
 	public boolean isAlarm() {
 		return isAlarm;
 	}
+
 	public void setAlarm(boolean isAlarm) {
 		this.isAlarm = isAlarm;
 	}
+
 	public boolean isCBOT() {
 		return isCBOT;
 	}
+
 	public void setCBOT(boolean isCBOT) {
 		this.isCBOT = isCBOT;
 	}
+
 	public Integer getHighAlarmThreshold() {
 		return HighAlarmThreshold;
 	}
+
 	public void setHighAlarmThreshold(Integer highAlarmThreshold) {
 		HighAlarmThreshold = highAlarmThreshold;
 	}
+
 	public Integer getHighThresholdLimit() {
 		return HighThresholdLimit;
 	}
+
 	public void setHighThresholdLimit(Integer highThresholdLimit) {
 		HighThresholdLimit = highThresholdLimit;
 	}
+
 	public Integer getLowAlarmThreshold() {
 		return LowAlarmThreshold;
 	}
+
 	public void setLowAlarmThreshold(Integer lowAlarmThreshold) {
 		LowAlarmThreshold = lowAlarmThreshold;
 	}
+
 	public Integer getLowThresholdLimit() {
 		return LowThresholdLimit;
 	}
+
 	public void setLowThresholdLimit(Integer lowThresholdLimit) {
 		LowThresholdLimit = lowThresholdLimit;
 	}
+
 	public Integer getCollectionInterval() {
 		return CollectionInterval;
 	}
+
 	public void setCollectionInterval(Integer collectionInterval) {
 		CollectionInterval = collectionInterval;
 	}
+
 	public Integer getStorageInterval() {
 		return StorageInterval;
 	}
+
 	public void setStorageInterval(Integer storageInterval) {
 		StorageInterval = storageInterval;
 	}
+
 	public Integer getUploadInterval() {
 		return UploadInterval;
 	}
+
 	public void setUploadInterval(Integer uploadInterval) {
 		UploadInterval = uploadInterval;
 	}
+
 	public Integer getPostStorageInterval() {
 		return PostStorageInterval;
 	}
+
 	public void setPostStorageInterval(Integer postStorageInterval) {
 		PostStorageInterval = postStorageInterval;
 	}
+
 	public Integer getPostUploadInterval() {
 		return PostUploadInterval;
 	}
+
 	public void setPostUploadInterval(Integer postUploadInterval) {
 		PostUploadInterval = postUploadInterval;
 	}
-	
-	
+
 }
