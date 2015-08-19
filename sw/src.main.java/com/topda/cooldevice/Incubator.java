@@ -5,14 +5,13 @@ import java.util.Observable;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * �������豸��
- * 
- * @Title: Incubator.java
- * @Package com.topda.cooldevice
- * @Description: TODO(��һ�仰�������ļ���ʲô)
- * @author wangkl
- * @date 2015-7-5 ����8:51:21
- * @version V1.0
+ * 设备属性类
+* @Title: Incubator.java 
+* @Package com.topda.cooldevice 
+* @Description: TODO(用一句话描述该文件做什么) 
+* @author wangkl
+* @date 2015-8-19 下午1:47:59 
+* @version V1.0
  */
 public class Incubator extends Observable {
 

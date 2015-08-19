@@ -157,7 +157,13 @@
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis-spring</artifactId>
 			<version>1.2.1</version>
-		</dependency>		
+		</dependency>
+		
+<!--    <dependency>   
+      <groupId>dom4j</groupId>    
+      <artifactId>dom4j</artifactId>    
+      <version>1.6</version>   
+    </dependency>  -->				
 	</dependencies>
 	<build>
 		<sourceDirectory>${basedir}/src</sourceDirectory>

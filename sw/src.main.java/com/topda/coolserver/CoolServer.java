@@ -37,7 +37,6 @@ public class CoolServer {
 				}
 
 			};
-			System.out.println("begin get minaHandler:");
 			//minaHandler = (MyProtocolHandler) SpringContextUtil.getBean("minaHandler");
 			System.out.println("minaHandler:" + minaHandler);
 			//
@@ -57,19 +56,8 @@ public class CoolServer {
 	public void removeTemperDataListenr() {
 
 		try {
-			DataListener lis = new DataListener() {
 
-				public void handleEvent(DataEvent de) {
-					Incubator inc = (Incubator) de.getSource();
-
-					System.out.println("coolserver:" + inc.getBoxSn());
-
-				}
-
-			};
-			System.out.println("begin get minaHandler:");
 			minaHandler = (MyProtocolHandler) SpringContextUtil.getBean("minaHandler");
-			System.out.println("minaHandler:" + minaHandler);
 			//
 			minaHandler.setDataListener(null);
 

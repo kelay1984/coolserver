@@ -6,6 +6,7 @@ import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 import org.springframework.stereotype.Service;
 
+import com.topda.coolserver.AnalyzeUtil;
 import com.topda.coolserver.ByteAndStr16;
 import com.topda.event.DataEvent;
 import com.topda.event.DataListener;
@@ -48,6 +49,9 @@ public class MyProtocolHandler extends IoHandlerAdapter {
 		byte[] byten = new byte[bbuf.limit()];
 		bbuf.get(byten, bbuf.position(), bbuf.limit());
 		System.out.println("客户端收到消息" + ByteAndStr16.Bytes2HexString(byten));
+		AnalyzeUtil alu = new AnalyzeUtil();
+		alu.analyze(byten);
+		
 		Incubator inc = new Incubator();
 		inc.setBoxSn(ByteAndStr16.Bytes2HexString(byten));
 		DataEvent de = new DataEvent(inc);

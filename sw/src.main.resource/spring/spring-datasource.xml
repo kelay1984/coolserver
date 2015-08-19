@@ -52,9 +52,9 @@
           
     </bean>  
       
-    <bean id="weshareSqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">  
+<!--     <bean id="weshareSqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">  
         <constructor-arg index="0" ref="coolSessionFactory"></constructor-arg>  
-    </bean>  
+    </bean>   -->
       
     <!-- 注册单个  mybatisGenerator  自动生成的 接口文件-->  
     <!--   
