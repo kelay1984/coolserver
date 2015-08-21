@@ -18,7 +18,7 @@ public class MyCodeFactory implements ProtocolCodecFactory {
 	final static char endchar = 0x0d;
 
 	public MyCodeFactory() {
-		this(Charset.forName("GBK"));
+		this(Charset.forName("UTF-8"));
 	}
 
 	public MyCodeFactory(Charset charset) {

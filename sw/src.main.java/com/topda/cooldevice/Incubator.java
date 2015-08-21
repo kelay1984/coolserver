@@ -14,7 +14,7 @@ import org.apache.commons.lang.StringUtils;
 * @version V1.0
  */
 public class Incubator extends Observable {
-
+	private int type;
 	private String ip;
 	private String port;
 	/**
@@ -78,6 +78,8 @@ public class Incubator extends Observable {
 	 * �������ϴ����
 	 */
 	private Integer PostUploadInterval;
+	
+	private SendMsg sendMsg;
 
 	public void init() {
 
@@ -93,6 +95,14 @@ public class Incubator extends Observable {
 
 		// ֻ����setChange()�����ú�notifyObservers()�Ż�ȥ����update()������ʲô�����ɡ�
 		notifyObservers();
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
 	}
 
 	public String getIp() {
@@ -223,4 +233,14 @@ public class Incubator extends Observable {
 		PostUploadInterval = postUploadInterval;
 	}
 
+	public SendMsg getSendMsg() {
+		return sendMsg;
+	}
+
+	public void setSendMsg(SendMsg sendMsg) {
+		this.sendMsg = sendMsg;
+	}
+
+
+	
 }

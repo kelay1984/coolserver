@@ -5,12 +5,16 @@
 	<artifactId>coolserver</artifactId>
 	<version>1.0</version>
 	<packaging>war</packaging>
-	<name />
-	<description />
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<springframework.version>3.1.1.RELEASE</springframework.version>
+		  <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+ 
+        <package.environment>local</package.environment>
 	</properties>	
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.openejb</groupId>
@@ -30,12 +34,12 @@
 			<version>1.2</version>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
+<!-- 		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>jsp-api</artifactId>
 			<version>2.1</version>
 			<scope>provided</scope>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>javax.faces</groupId>
 			<artifactId>jsf-impl</artifactId>
@@ -145,6 +149,11 @@
 			<artifactId>commons-dbcp</artifactId>
 			<version>1.4</version>
 		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.27</version>
+		</dependency>		
 		<!-- 配置数据源 end -->		
 		<!-- ormapping -->
 		<dependency>
@@ -158,13 +167,19 @@
 			<artifactId>mybatis-spring</artifactId>
 			<version>1.2.1</version>
 		</dependency>
-		
+<!-- 		<dependency>
+			<groupId>org.glassfish.web</groupId>
+			<artifactId>el-impl</artifactId>
+			<version>2.2</version>
+		</dependency>	 -->	
 <!--    <dependency>   
       <groupId>dom4j</groupId>    
       <artifactId>dom4j</artifactId>    
       <version>1.6</version>   
-    </dependency>  -->				
+    </dependency>  -->		
+    		
 	</dependencies>
+	
 	<build>
 		<sourceDirectory>${basedir}/src</sourceDirectory>
 		<outputDirectory>${basedir}/WebRoot/WEB-INF/classes</outputDirectory>
@@ -179,11 +194,39 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
+				<version>2.2</version>
 				<configuration>
+					<webXml>${basedir}/WebRoot/WEB-INF/web.xml</webXml>
 					<webappDirectory>${basedir}/WebRoot</webappDirectory>
 					<warSourceDirectory>${basedir}/WebRoot</warSourceDirectory>
 				</configuration>
 			</plugin>
+<!-- <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.1.1</version>
+                <configuration>
+                    <archive>
+                        <addMavenDescriptor>false</addMavenDescriptor>
+                    </archive>
+                    <warName>book</warName>
+                    <webResources>
+                        <resource>
+                            <directory>src.main.resource</directory>
+                            <targetPath>WEB-INF/classes</targetPath>
+                            <filtering>true</filtering>
+                        </resource>
+
+                        <resource>
+                            <directory>${project.build.directory}/classes</directory>
+                            <includes>
+                                <include>**/*.properties</include>
+                                <include>**/*.xml</include>
+                            </includes>
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin> -->			
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
@@ -198,7 +241,7 @@
 				<configuration>
 					<warFile>target/coolserver-1.0.war</warFile>
 					<server>tomcat</server>
-					<url>http://localhost:8080/manager</url>
+					<url>http://localhost:8080/manager/text</url>
 					<path>/coolserver</path>
 					<server>tomcat</server>
 					<username>admin</username>

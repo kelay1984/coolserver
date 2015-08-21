@@ -1,26 +1,22 @@
 package com.topda.coolserver;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.math.BigInteger;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.apache.taglibs.standard.tag.common.fmt.ParseDateSupport;
+
+import com.topda.common.Utils;
+import com.topda.cooldevice.Incubator;
+import com.topda.cooldevice.SendMsg;
+
 public class AnalyzeUtil{
 
-	public void analyze(byte[] receData)
+	public Incubator analyze(byte[] receData)
 	{
-
+		Incubator inc = null;
 		try{
 	        byte[] start = new byte[2];
 	        int startPos =0;
@@ -35,7 +31,7 @@ public class AnalyzeUtil{
 			{
 				System.arraycopy(receData, startPos, start, 0, start.length);
 				//is.read(start);	
-				System.out.println("head is === "+byte2hex(start));
+				System.out.println("head is === "+Utils.byte2hex(start));
 				//message head check byte -128~127
 				if(start[0]==(byte)170&&start[1]==(byte)187)
 				{
@@ -54,10 +50,10 @@ public class AnalyzeUtil{
 					  int endPos =checkPos+check.length;
 					  System.arraycopy(receData, endPos, end, 0, end.length);
 					  
-					  System.out.println("the send message =="+byte2hex(start)+byte2hex(length)+byte2hex(data)+byte2hex(check)+byte2hex(end));
-					  if(byte2hex(end).equals("EF")||end[0]==(byte)239)
+					  System.out.println("the send message =="+Utils.byte2hex(start)+Utils.byte2hex(length)+Utils.byte2hex(data)+Utils.byte2hex(check)+Utils.byte2hex(end));
+					  if(Utils.byte2hex(end).equals("EF")||end[0]==(byte)239)
 					  {
-						  dealWithData(data);
+						  inc =dealWithData(data);
 					  }
 					  else
 					  {
@@ -84,9 +80,12 @@ public class AnalyzeUtil{
 		}catch(Exception e){
 			System.out.println("Error:"+e);
 		}
+		
+		return inc;
 	}
-	public void dealWithData(byte [] data) throws IOException, SQLException, ClassNotFoundException
+	public Incubator dealWithData(byte [] data) throws IOException, SQLException, ClassNotFoundException
 	{
+		Incubator inc = new Incubator();
 		if(data!=null&&data.length>0)
 		{
 			byte reqnum = data[0];
@@ -107,7 +106,7 @@ public class AnalyzeUtil{
 				    {
 					byte[] boxid = new byte[6];
 					copy(data,boxid,2);
-					String strboxid = byte2hex(boxid);
+					String strboxid = Utils.byte2hex(boxid);
 					if(strboxid!=null&&strboxid.length()>6)
 					{
 						strboxid = strboxid.substring(0, 6);
@@ -155,14 +154,14 @@ public class AnalyzeUtil{
 				   {
 					 byte[] boxid = new byte[6];
 					copy(data, boxid, 2);
-					String strboxid = byte2hex(boxid);
+					String strboxid = Utils.byte2hex(boxid);
 					if(strboxid!=null&&strboxid.length()>6)
 					{
 						strboxid = strboxid.substring(0, 6);
 					}
 					byte[] local = new byte[4];
 					copy(data, local, 8);
-					String strlocal = byte2hex(local);
+					String strlocal = Utils.byte2hex(local);
 					byte[] htime = new byte[6];
 					copy(data,htime,12);
 					String strhtime = changeTime(htime);
@@ -204,9 +203,10 @@ public class AnalyzeUtil{
 				   {
 					byte[] boxid = new byte[6];
 					copy(data, boxid, 2); 
-					byte[] ctime = getCurrTime();
+					//byte[] ctime = getCurrTime();
+					byte[] ctime = parseDate();
 					
-					String strboxid = byte2hex(boxid);
+					String strboxid = Utils.byte2hex(boxid);
 					if(strboxid!=null&&strboxid.length()>6)
 					{
 						strboxid = strboxid.substring(0, 6);
@@ -221,8 +221,8 @@ public class AnalyzeUtil{
 					for (int i = 0; i < ctime.length; i++) {
 						senddata[7+i] = ctime[i];
 					}
-					byte[] xq = parseDate();
-					senddata[senddata.length-1] = xq[0];
+					//byte[] xq = parseDate();
+					//senddata[senddata.length-1] = xq[0];
 					byte[] sendmessage = getSendMessage(senddata);
 /*					BufferedOutputStream os = new BufferedOutputStream(socket
 							.getOutputStream());
@@ -231,6 +231,11 @@ public class AnalyzeUtil{
 					os.close();*/
 
 					// //send message end
+					SendMsg msg = new SendMsg();
+					msg.setSendMsg(sendmessage);
+					inc.setSendMsg(msg);
+					inc.setType(4);
+					inc.setBoxSn(strboxid);
 					break;
 				   }
 				case (byte) 128:
@@ -266,6 +271,8 @@ public class AnalyzeUtil{
 			System.out.println("data is null!");				
 		
 		}
+		
+		return inc;
 
 	}
 	public void saveData(String sql) throws SQLException, ClassNotFoundException
@@ -288,46 +295,9 @@ public class AnalyzeUtil{
 			conn.close();
 		}	*/													
 	}
-public byte[] hex2byte(String hex)
-	{
-	   String shex = hex.toUpperCase();
-	   if((shex.length()%2)!=0)
-	   {
-		   shex = "0"+shex;
-	   }
-	   int len = (shex.length()/2);
-	   byte[] result = new byte[len];
-	   char[] achar = shex.toCharArray();
-	   for(int i=0;i<len;i++)
-	   {
-	     int pos = i*2;
-	     result[i] = (byte)(toByte(achar[pos])<<4|toByte(achar[pos+1]));
-	   }
-	   return result;
-	   
-	}
-public byte toByte(char c)
-	{
-	  byte b = (byte)"0123456789ABCDEF".indexOf(c);
-	  return b;
-	}
- public String byte2hex(byte[] b) {
-		String hs = "";
-		String tmp = "";
-		for (int n = 0; n < b.length; n++) {
 
-			tmp = (java.lang.Integer.toHexString(b[n] & 0XFF));
 
-			if (tmp.length() == 1) {
-				hs = hs + "0" + tmp;
 
-			} else {
-				hs = hs + tmp;
-			}
-		}
-		tmp = null;
-		return hs.toUpperCase();
-	} 
  
  public byte[] copy(byte[] a,byte[] b,int s)
  {
@@ -346,10 +316,10 @@ public byte toByte(char c)
 		 //+shu 
 		 byte[] bzs = new byte[1];
 		 bzs[0] = wd[0];
-		 int strzs = Integer.parseInt(byte2hex(bzs),16);
+		 int strzs = Integer.parseInt(Utils.byte2hex(bzs),16);
 		 byte[] bxs = new byte[1];
 		 bxs[0] = wd[1];
-		 int ixs = Integer.parseInt(byte2hex(bxs),16)*625/1000;		 
+		 int ixs = Integer.parseInt(Utils.byte2hex(bxs),16)*625/1000;		 
 		 float wendu = strzs+(float)ixs/10;
 		 strwd = String.valueOf(wendu);
 	 }	 
@@ -365,7 +335,7 @@ public byte toByte(char c)
 		 bzs[0] = wd[0];         		 
 		 byte[] bxs = new byte[1];
 		 bxs[0] = wd[1];
-		 int ixs = Integer.parseInt(byte2hex(bxs),16)*625/1000;	
+		 int ixs = Integer.parseInt(Utils.byte2hex(bxs),16)*625/1000;	
 		 int flag = (int)bzs[0] & 0x80;
 		 if(flag==128)
 		 {
@@ -381,7 +351,7 @@ public byte toByte(char c)
 		 {
 			 System.out.println("正数处理flag ==="+flag);
 			 strwd = "+";
-			 int strzs = Integer.parseInt(byte2hex(bzs),16);		 		 
+			 int strzs = Integer.parseInt(Utils.byte2hex(bzs),16);		 		 
 		     float wendu = strzs+(float)ixs/10;
 		     strwd += String.valueOf(wendu);
 		 }
@@ -402,11 +372,11 @@ public byte toByte(char c)
 	 bd[0] = time[3];
 	 bh[0] = time[4];
 	 bmi[0] = time[5];
-	 String yyyy = String.valueOf(Integer.parseInt(byte2hex(by),16));
-	 String mm = String.valueOf(Integer.parseInt(byte2hex(bm),16));
-	 String dd = String.valueOf(Integer.parseInt(byte2hex(bd),16));
-	 String hh = String.valueOf(Integer.parseInt(byte2hex(bh),16));
-	 String mi = String.valueOf(Integer.parseInt(byte2hex(bmi),16));
+	 String yyyy = String.valueOf(Integer.parseInt(Utils.byte2hex(by),16));
+	 String mm = String.valueOf(Integer.parseInt(Utils.byte2hex(bm),16));
+	 String dd = String.valueOf(Integer.parseInt(Utils.byte2hex(bd),16));
+	 String hh = String.valueOf(Integer.parseInt(Utils.byte2hex(bh),16));
+	 String mi = String.valueOf(Integer.parseInt(Utils.byte2hex(bmi),16));
 	 return yyyy+"-"+mm+"-"+dd+" "+hh+":"+mi+":"+"00";	 
  }
  public byte[] getSendMessage(byte[] data)
@@ -423,7 +393,7 @@ public byte toByte(char c)
 	 sendmessage[data.length+4] = (byte)239;
 	 return sendmessage;
  }
- public byte[] getCurrTime()
+ public static byte[] getCurrTime()
  {
 	 byte[] ctime = new byte[6];
 	 Calendar c = Calendar.getInstance();
@@ -432,11 +402,11 @@ public byte toByte(char c)
 	 String sdd = Integer.toHexString(c.get(Calendar.DATE));
 	 String shh = Integer.toHexString(c.get(Calendar.HOUR_OF_DAY));
 	 String smi = Integer.toHexString(c.get(Calendar.MINUTE));
-	 byte[] byy = hex2byte(syy);
-	 byte[] bmm = hex2byte(smm);
-	 byte[] bdd = hex2byte(sdd);
-	 byte[] bhh = hex2byte(shh);
-	 byte[] bmi = hex2byte(smi);
+	 byte[] byy = Utils.hex2byte(syy);
+	 byte[] bmm = Utils.hex2byte(smm);
+	 byte[] bdd = Utils.hex2byte(sdd);
+	 byte[] bhh = Utils.hex2byte(shh);
+	 byte[] bmi = Utils.hex2byte(smi);
 	 if(byy!=null&&byy.length==2)
 	 {
 		 ctime[0] = byy[0];
@@ -461,13 +431,43 @@ public byte toByte(char c)
 	 return ctime;
  }
  
- public byte[] parseDate() {
+ public static byte[] parseDate() {
 		Calendar calendar = Calendar.getInstance();
 		Date date = new Date();
 		calendar.setTime(date);
 		int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-		byte[] byy = hex2byte(String.valueOf(dayOfWeek));
-		return byy;
+		int year = calendar.get(Calendar.YEAR);
+		String year1 = String.valueOf(year).substring(0,2);
+		String year2 = String.valueOf(year).substring(2,4);
+		int month = calendar.get(Calendar.MONTH);
+		int day = calendar.get(Calendar.DATE);
+		int hour = calendar.get(Calendar.HOUR);
+		int minute = calendar.get(Calendar.MINUTE);
+
+		byte[] byearpre = Utils.hex2byte(year1);
+		byte[] byearend = Utils.hex2byte(year2);
+		byte[] bmonth = Utils.hex2byte(String.valueOf(month));
+		byte[] bday = Utils.hex2byte(String.valueOf(day));
+		byte[] bhour = Utils.hex2byte(String.valueOf(hour));
+		byte[] bminute = Utils.hex2byte(String.valueOf(minute));
+
+		byte[] bdow = Utils.hex2byte(String.valueOf(dayOfWeek));
+
+		byte [] currDate = new byte[7];
+		
+		System.arraycopy(byearpre, 0, currDate, 0, 1);
+		System.arraycopy(byearend, 0, currDate, 1, 1);
+		System.arraycopy(bmonth, 0, currDate, 2, 1);
+		System.arraycopy(bday, 0, currDate, 3, 1);
+		System.arraycopy(bhour, 0, currDate, 4, 1);
+		System.arraycopy(bminute, 0, currDate, 5, 1);
+		System.arraycopy(bdow, 0, currDate, 6, 1);
+		return currDate;
 	}
+ 
+ public static void main(String args[]){
+	 System.out.println(ByteAndStr16.Bytes2HexString(getCurrTime()));
+ }
+
  
 }

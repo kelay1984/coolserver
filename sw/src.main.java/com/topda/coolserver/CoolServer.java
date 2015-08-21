@@ -2,19 +2,24 @@ package com.topda.coolserver;
 
 import javax.annotation.Resource;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.topda.common.SpringContextUtil;
 import com.topda.cooldevice.Incubator;
 import com.topda.cooldevice.MyProtocolHandler;
+import com.topda.dao.MonitorTemperatureDao;
 import com.topda.event.DataEvent;
 import com.topda.event.DataListener;
+import com.topda.pojo.MonitorTemperature;
+
 
 @Service
 public class CoolServer {
 	@Resource
 	private MyProtocolHandler minaHandler;
+	@Autowired
+	private MonitorTemperatureDao monitorTemperatureDao;
 	
 	public MyProtocolHandler getMinaHandler() {
 		return minaHandler;
@@ -32,13 +37,17 @@ public class CoolServer {
 				public void handleEvent(DataEvent de) {
 					Incubator inc = (Incubator) de.getSource();
 
+					if(inc.getType()==4){
+						MonitorTemperature mt = new MonitorTemperature();
+						mt.setBoxsn(inc.getBoxSn());
+				
+						monitorTemperatureDao.insert(mt);
+					}
 					System.out.println("coolserver:" + inc.getBoxSn());
 
 				}
 
 			};
-			//minaHandler = (MyProtocolHandler) SpringContextUtil.getBean("minaHandler");
-			System.out.println("minaHandler:" + minaHandler);
 			//
 			if(minaHandler.getDataListener()==null){
 				minaHandler.setDataListener(lis);
