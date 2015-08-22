@@ -1,18 +1,13 @@
 package com.topda.cooldevice;
 
-import java.math.BigInteger;
-
-import javax.mail.internet.NewsAddress;
-
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
-import org.springframework.stereotype.Service;
 
 import com.topda.common.Utils;
 import com.topda.coolserver.AnalyzeUtil;
-import com.topda.coolserver.ByteAndStr16;
+import com.topda.common.ByteAndStr16;
 import com.topda.event.DataEvent;
 import com.topda.event.DataListener;
 
@@ -47,20 +42,17 @@ public class MyProtocolHandler extends IoHandlerAdapter {
 	@Override
 	public void messageReceived(IoSession session, Object message)
 			throws Exception {
-		// TODO Auto-generated method stub
 
-		System.out.println("收到信息");
 		IoBuffer bbuf = (IoBuffer) message;
 		byte[] byten = new byte[bbuf.limit()];
 		bbuf.get(byten, bbuf.position(), bbuf.limit());
-		System.out.println("客户端收到消息" + ByteAndStr16.Bytes2HexString(byten));
+		System.out.println("rece msg:" + ByteAndStr16.Bytes2HexString(byten));
 		AnalyzeUtil alu = new AnalyzeUtil();
 		Incubator inc =alu.analyze(byten);
-		System.out.println("inc.getSendMsg()"+inc.getSendMsg());
+
 		if(inc.getSendMsg()!=null){
-			System.out.println("send............."+inc.getSendMsg().getSendMsg());
-			System.out.println("send............."+ByteAndStr16.Bytes2HexString(inc.getSendMsg().getSendMsg()));
-			session.write(inc.getSendMsg().getSendMsg());
+			System.out.println("server send："+ByteAndStr16.Bytes2HexString(inc.getSendMsg().getSendMsg()));
+			session.write(IoBuffer.wrap(inc.getSendMsg().getSendMsg()));
 		}
 		DataEvent de = new DataEvent(inc);
 
@@ -71,7 +63,7 @@ public class MyProtocolHandler extends IoHandlerAdapter {
 
 	@Override
 	public void messageSent(IoSession session, Object message) throws Exception {
-		System.out.println("小心发送");
+		System.out.println("begin send");
 	}
 
 	@Override

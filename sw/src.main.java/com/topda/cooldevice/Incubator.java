@@ -18,16 +18,20 @@ public class Incubator extends Observable {
 	private String ip;
 	private String port;
 	/**
-	 * �豸��
+	 * 箱子编号
 	 */
 	private String boxSn;
 	/**
-	 * �¶�
+	 * sim卡号
+	 */
+	private String sim;
+	/**
+	 * 温度
 	 */
 	private String temperature;
 
 	/**
-	 * �¶Ȳɼ�ʱ��
+	 * 采集时间
 	 */
 	private Date collectTime;
 	/**
@@ -127,6 +131,16 @@ public class Incubator extends Observable {
 
 	public void setBoxSn(String boxSn) {
 		this.boxSn = boxSn;
+	}
+
+	
+	
+	public String getSim() {
+		return sim;
+	}
+
+	public void setSim(String sim) {
+		this.sim = sim;
 	}
 
 	public String getTemperature() {

@@ -6,8 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.apache.taglibs.standard.tag.common.fmt.ParseDateSupport;
-
 import com.topda.common.Utils;
 import com.topda.cooldevice.Incubator;
 import com.topda.cooldevice.SendMsg;
@@ -97,7 +95,9 @@ public class AnalyzeUtil{
 			else
 			{
 				byte command = data[1];
-				switch (command) 
+				int type =(int)command;
+				inc.setType(type);
+				switch (type) 
 				{
 			     case 0:
 
@@ -234,10 +234,55 @@ public class AnalyzeUtil{
 					SendMsg msg = new SendMsg();
 					msg.setSendMsg(sendmessage);
 					inc.setSendMsg(msg);
-					inc.setType(4);
 					inc.setBoxSn(strboxid);
 					break;
 				   }
+				case 8:
+				   {
+					byte[] boxid = new byte[6];
+					copy(data, boxid, 2); 
+					byte[] sim = new byte[20];
+					copy(data, sim, 8); 
+					
+					String strboxid = Utils.byte2hex(boxid);
+					if(strboxid!=null&&strboxid.length()>6)
+					{
+						strboxid = strboxid.substring(0, 6);
+					}
+					inc.setBoxSn(strboxid);
+					System.out.println("strboxid:" + strboxid);
+					
+					String strsim = Utils.byte2hex(sim);
+					if(strsim!=null&&strsim.length()>20)
+					{
+						strsim = strsim.substring(0, 20);
+					}
+					inc.setSim(strsim);
+					System.out.println("strsim:" + strsim);
+					// //send message start
+					byte[] senddata = new byte[14];
+					senddata[0] = reqnum;
+					for (int i = 0; i < boxid.length; i++) {
+						senddata[i + 1] = boxid[i];
+					}
+
+					//byte[] xq = parseDate();
+					//senddata[senddata.length-1] = xq[0];
+					byte[] sendmessage = getSendMessage(senddata);
+/*					BufferedOutputStream os = new BufferedOutputStream(socket
+							.getOutputStream());
+					os.write(sendmessage);
+					os.flush();
+					os.close();*/
+
+					// //send message end
+					SendMsg msg = new SendMsg();
+					msg.setSendMsg(sendmessage);
+					inc.setSendMsg(msg);
+
+					inc.setBoxSn(strboxid);
+					break;
+				   }				   
 				case (byte) 128:
 				   {
 					byte[] boxid = new byte[6];
@@ -464,10 +509,5 @@ public class AnalyzeUtil{
 		System.arraycopy(bdow, 0, currDate, 6, 1);
 		return currDate;
 	}
- 
- public static void main(String args[]){
-	 System.out.println(ByteAndStr16.Bytes2HexString(getCurrTime()));
- }
 
- 
 }

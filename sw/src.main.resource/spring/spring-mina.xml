@@ -39,7 +39,7 @@
 			<bean class="org.apache.mina.filter.codec.textline.TextLineCodecFactory" />
 		</constructor-arg> -->
 		<constructor-arg>
-			<bean class="com.topda.coolserver.ByteArrayCodecFactory" />
+			<bean class="com.topda.common.ByteArrayCodecFactory" />
 		</constructor-arg>		
 	</bean>
 	<bean id="loggingFilter" class="org.apache.mina.filter.logging.LoggingFilter" />
