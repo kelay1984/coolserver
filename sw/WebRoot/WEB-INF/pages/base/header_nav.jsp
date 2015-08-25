@@ -41,15 +41,14 @@ body {
 
 <body>
 	<div class='container'>
-		<h1>TWITTER BOOTSTRAP TUTORIAL</h1>
+		<h1>冷链设备中间件控制中心</h1>
 		<div class='navbar navbar-inverse'>
 			<div class='navbar-inner nav-collapse' style="height: auto;">
 				<ul id="myTab" class="nav">
 					<li class="active"><a
-						href="<%=request.getContextPath()%>/welcome/hellow">Home</a></li>
-					<li><a href="<%=request.getContextPath()%>/welcome/setting">Page
-							One</a></li>
-					<li><a href="#">Page Two</a></li>
+						href="<%=request.getContextPath()%>/welcome/hellow">主页</a></li>
+					<li><a href="<%=request.getContextPath()%>/welcome/setting">初始化</a></li>
+					<li><a href="#">其他</a></li>
 				</ul>
 			</div>
 		</div>

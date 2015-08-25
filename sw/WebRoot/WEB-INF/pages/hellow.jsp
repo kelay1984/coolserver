@@ -78,9 +78,10 @@
 		<jsp:include page="./base/header_nav.jsp"/>
 	</div>
 	<div class="row-fluid marginTop active">
-	  <div id="content" style="padding:120px;">
-		<button type="button" class="btn btn-success" id="initServer">start</button>
+	  <div id="content" style="padding:150px;margin: 40px;">
+	  	<button type="button" class="btn btn-success" id="initServer">start</button>&nbsp;&nbsp;&nbsp;&nbsp;
 		<button type="button" class="btn btn-danger" id="stopServer">stop</button>
+		
 	  </div>
 	</div>		
 </body>

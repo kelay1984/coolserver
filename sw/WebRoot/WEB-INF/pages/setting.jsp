@@ -94,8 +94,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		<jsp:include page="./base/header_nav.jsp"/>
 	</div>
 	<div id="content" class="row-fluid marginTop active">
-		<div class='span9 main'>
-			<p>2222222222222222222222</p>
+		<!-- <div class='span9 main' style="padding:150px;margin: 40px;"> -->
+		<div style="padding:150px;margin: 40px;">
+			<p>尚未开发</p>
 		</div>
     </div>
  
