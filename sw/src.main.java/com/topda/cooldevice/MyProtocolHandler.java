@@ -4,25 +4,18 @@ import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.topda.common.Utils;
-import com.topda.coolserver.AnalyzeUtil;
 import com.topda.common.ByteAndStr16;
+import com.topda.common.Utils;
 import com.topda.event.DataEvent;
 import com.topda.event.DataListener;
+import com.topda.vo.Incubator;
 
 public class MyProtocolHandler extends IoHandlerAdapter {
-	/*
-	 * @Override public void messageReceived(IoSession session, Object message)
-	 * throws Exception { SendMessage sm = (SendMessage) message;
-	 * System.out.println("The message received is [ " + sm.getI() + " " +
-	 * sm.getSymbol() + " " + sm.getJ() + " ]"); ResultMessage rm = new
-	 * ResultMessage(); rm.setResult(sm.getI() + sm.getJ()); session.write(rm);
-	 * if (message instanceof ByteBuffer) { ByteBuffer rb = (ByteBuffer)
-	 * message; byte[] moMessage = new byte[rb.remaining()]; rb.get(moMessage);
-	 * Endpoint endpoint = new MinaEndpoint(session);
-	 * endpoint.receive(moMessage); } super.messageReceived(session, message); }
-	 */
+	private static final Logger logger = LoggerFactory
+			.getLogger(MyProtocolHandler.class);
 	private DataListener dataListener;// 监听自己的监听器队列
 
 	public DataListener getDataListener() {
@@ -36,7 +29,7 @@ public class MyProtocolHandler extends IoHandlerAdapter {
 	@Override
 	public void exceptionCaught(IoSession session, Throwable cause)
 			throws Exception {
-		System.out.println("err:" + cause.getMessage());
+		logger.error("err:" + cause.getMessage());
 	}
 
 	@Override
@@ -46,12 +39,12 @@ public class MyProtocolHandler extends IoHandlerAdapter {
 		IoBuffer bbuf = (IoBuffer) message;
 		byte[] byten = new byte[bbuf.limit()];
 		bbuf.get(byten, bbuf.position(), bbuf.limit());
-		System.out.println("rece msg:" + ByteAndStr16.Bytes2HexString(byten));
+		logger.debug("rece msg:" + ByteAndStr16.Bytes2HexString(byten));
 		AnalyzeUtil alu = new AnalyzeUtil();
 		Incubator inc =alu.analyze(byten);
 
 		if(inc.getSendMsg()!=null){
-			System.out.println("server send："+ByteAndStr16.Bytes2HexString(inc.getSendMsg().getSendMsg()));
+			logger.debug("server send："+ByteAndStr16.Bytes2HexString(inc.getSendMsg().getSendMsg()));
 			session.write(IoBuffer.wrap(inc.getSendMsg().getSendMsg()));
 		}
 		DataEvent de = new DataEvent(inc);
@@ -63,29 +56,28 @@ public class MyProtocolHandler extends IoHandlerAdapter {
 
 	@Override
 	public void messageSent(IoSession session, Object message) throws Exception {
-		System.out.println("begin send");
+		logger.debug("send");
 	}
 
 	@Override
 	public void sessionClosed(IoSession session) throws Exception {
-		// TODO Auto-generated method stub
 		super.sessionClosed(session);
 	}
 
 	@Override
 	public void sessionCreated(IoSession session) throws Exception {
-		System.out.println(session.getRemoteAddress().toString() + "---create");
+		logger.debug(session.getRemoteAddress().toString() + "---create");
 	}
 
 	@Override
 	public void sessionIdle(IoSession session, IdleStatus status)
 			throws Exception {
-		System.out.println(session.getServiceAddress() + "IDS");
+		logger.debug(session.getServiceAddress() + "IDS");
 	}
 
 	@Override
 	public void sessionOpened(IoSession session) throws Exception {
-		System.out.println("连接打开：" + session.getLocalAddress());
+		logger.debug("连接打开：" + session.getLocalAddress());
 	}
 
 	public class SendMessage {

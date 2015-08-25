@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topda.dao.MonitorTemperatureDao" >
+  <resultMap id="BaseResultMap" type="com.topda.pojo.MonitorTemperature" >
+    <id column="Keyid" property="keyid" jdbcType="INTEGER" />
+    <result column="datehappen" property="datehappen" jdbcType="TIMESTAMP" />
+    <result column="temperature" property="temperature" jdbcType="REAL" />
+    <result column="serverdatetime" property="serverdatetime" jdbcType="TIMESTAMP" />
+    <result column="boxsn" property="boxsn" jdbcType="VARCHAR" />
+    <result column="power" property="power" jdbcType="INTEGER" />
+    <result column="doorstate" property="doorstate" jdbcType="INTEGER" />
+    <result column="supplyid" property="supplyid" jdbcType="INTEGER" />
+    <result column="swarning" property="swarning" jdbcType="INTEGER" />
+    <result column="srestriction" property="srestriction" jdbcType="INTEGER" />
+    <result column="lrestriction" property="lrestriction" jdbcType="INTEGER" />
+    <result column="lwarning" property="lwarning" jdbcType="INTEGER" />
+    <result column="reserve" property="reserve" jdbcType="INTEGER" />
+    <result column="outtemperature" property="outtemperature" jdbcType="REAL" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    Keyid, datehappen, temperature, serverdatetime, boxsn, power, doorstate, supplyid, 
+    swarning, srestriction, lrestriction, lwarning, reserve, outtemperature
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.topda.pojo.MonitorTemperatureExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from MONITOR_TEMPERATURE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart != null and limitStart>=0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from MONITOR_TEMPERATURE
+    where Keyid = #{keyid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from MONITOR_TEMPERATURE
+    where Keyid = #{keyid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.topda.pojo.MonitorTemperature" >
+    insert into MONITOR_TEMPERATURE (Keyid, datehappen, temperature, 
+      serverdatetime, boxsn, power, 
+      doorstate, supplyid, swarning, 
+      srestriction, lrestriction, lwarning, 
+      reserve, outtemperature)
+    values (#{keyid,jdbcType=INTEGER}, #{datehappen,jdbcType=TIMESTAMP}, #{temperature,jdbcType=REAL}, 
+      #{serverdatetime,jdbcType=TIMESTAMP}, #{boxsn,jdbcType=VARCHAR}, #{power,jdbcType=INTEGER}, 
+      #{doorstate,jdbcType=INTEGER}, #{supplyid,jdbcType=INTEGER}, #{swarning,jdbcType=INTEGER}, 
+      #{srestriction,jdbcType=INTEGER}, #{lrestriction,jdbcType=INTEGER}, #{lwarning,jdbcType=INTEGER}, 
+      #{reserve,jdbcType=INTEGER}, #{outtemperature,jdbcType=REAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.topda.pojo.MonitorTemperature" >
+    insert into MONITOR_TEMPERATURE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="keyid != null" >
+        Keyid,
+      </if>
+      <if test="datehappen != null" >
+        datehappen,
+      </if>
+      <if test="temperature != null" >
+        temperature,
+      </if>
+      <if test="serverdatetime != null" >
+        serverdatetime,
+      </if>
+      <if test="boxsn != null" >
+        boxsn,
+      </if>
+      <if test="power != null" >
+        power,
+      </if>
+      <if test="doorstate != null" >
+        doorstate,
+      </if>
+      <if test="supplyid != null" >
+        supplyid,
+      </if>
+      <if test="swarning != null" >
+        swarning,
+      </if>
+      <if test="srestriction != null" >
+        srestriction,
+      </if>
+      <if test="lrestriction != null" >
+        lrestriction,
+      </if>
+      <if test="lwarning != null" >
+        lwarning,
+      </if>
+      <if test="reserve != null" >
+        reserve,
+      </if>
+      <if test="outtemperature != null" >
+        outtemperature,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="keyid != null" >
+        #{keyid,jdbcType=INTEGER},
+      </if>
+      <if test="datehappen != null" >
+        #{datehappen,jdbcType=TIMESTAMP},
+      </if>
+      <if test="temperature != null" >
+        #{temperature,jdbcType=REAL},
+      </if>
+      <if test="serverdatetime != null" >
+        #{serverdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="boxsn != null" >
+        #{boxsn,jdbcType=VARCHAR},
+      </if>
+      <if test="power != null" >
+        #{power,jdbcType=INTEGER},
+      </if>
+      <if test="doorstate != null" >
+        #{doorstate,jdbcType=INTEGER},
+      </if>
+      <if test="supplyid != null" >
+        #{supplyid,jdbcType=INTEGER},
+      </if>
+      <if test="swarning != null" >
+        #{swarning,jdbcType=INTEGER},
+      </if>
+      <if test="srestriction != null" >
+        #{srestriction,jdbcType=INTEGER},
+      </if>
+      <if test="lrestriction != null" >
+        #{lrestriction,jdbcType=INTEGER},
+      </if>
+      <if test="lwarning != null" >
+        #{lwarning,jdbcType=INTEGER},
+      </if>
+      <if test="reserve != null" >
+        #{reserve,jdbcType=INTEGER},
+      </if>
+      <if test="outtemperature != null" >
+        #{outtemperature,jdbcType=REAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.topda.pojo.MonitorTemperatureExample" resultType="java.lang.Integer" >
+    select count(*) from MONITOR_TEMPERATURE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.topda.pojo.MonitorTemperature" >
+    update MONITOR_TEMPERATURE
+    <set >
+      <if test="datehappen != null" >
+        datehappen = #{datehappen,jdbcType=TIMESTAMP},
+      </if>
+      <if test="temperature != null" >
+        temperature = #{temperature,jdbcType=REAL},
+      </if>
+      <if test="serverdatetime != null" >
+        serverdatetime = #{serverdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="boxsn != null" >
+        boxsn = #{boxsn,jdbcType=VARCHAR},
+      </if>
+      <if test="power != null" >
+        power = #{power,jdbcType=INTEGER},
+      </if>
+      <if test="doorstate != null" >
+        doorstate = #{doorstate,jdbcType=INTEGER},
+      </if>
+      <if test="supplyid != null" >
+        supplyid = #{supplyid,jdbcType=INTEGER},
+      </if>
+      <if test="swarning != null" >
+        swarning = #{swarning,jdbcType=INTEGER},
+      </if>
+      <if test="srestriction != null" >
+        srestriction = #{srestriction,jdbcType=INTEGER},
+      </if>
+      <if test="lrestriction != null" >
+        lrestriction = #{lrestriction,jdbcType=INTEGER},
+      </if>
+      <if test="lwarning != null" >
+        lwarning = #{lwarning,jdbcType=INTEGER},
+      </if>
+      <if test="reserve != null" >
+        reserve = #{reserve,jdbcType=INTEGER},
+      </if>
+      <if test="outtemperature != null" >
+        outtemperature = #{outtemperature,jdbcType=REAL},
+      </if>
+    </set>
+    where Keyid = #{keyid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.topda.pojo.MonitorTemperature" >
+    update MONITOR_TEMPERATURE
+    set datehappen = #{datehappen,jdbcType=TIMESTAMP},
+      temperature = #{temperature,jdbcType=REAL},
+      serverdatetime = #{serverdatetime,jdbcType=TIMESTAMP},
+      boxsn = #{boxsn,jdbcType=VARCHAR},
+      power = #{power,jdbcType=INTEGER},
+      doorstate = #{doorstate,jdbcType=INTEGER},
+      supplyid = #{supplyid,jdbcType=INTEGER},
+      swarning = #{swarning,jdbcType=INTEGER},
+      srestriction = #{srestriction,jdbcType=INTEGER},
+      lrestriction = #{lrestriction,jdbcType=INTEGER},
+      lwarning = #{lwarning,jdbcType=INTEGER},
+      reserve = #{reserve,jdbcType=INTEGER},
+      outtemperature = #{outtemperature,jdbcType=REAL}
+    where Keyid = #{keyid,jdbcType=INTEGER}
+  </update>
+</mapper>
