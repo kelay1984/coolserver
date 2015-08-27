@@ -7,6 +7,7 @@ import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.mysql.jdbc.StringUtils;
 import com.topda.common.ByteAndStr16;
 import com.topda.common.Utils;
 import com.topda.event.DataEvent;
@@ -52,6 +53,8 @@ public class MyProtocolHandler extends IoHandlerAdapter {
 		if (this.dataListener != null) {
 			dataListener.handleEvent(de);
 		}
+		
+		session.close(false);
 	}
 
 	@Override
@@ -125,6 +128,7 @@ public class MyProtocolHandler extends IoHandlerAdapter {
 	public static void main(String args[]){
 		byte[] byearpre = Utils.hex2byte("20");
 		System.out.println(ByteAndStr16.Bytes2HexString(byearpre));
+		System.out.println(StringUtils.isNullOrEmpty("222"));
 	}
 
 }

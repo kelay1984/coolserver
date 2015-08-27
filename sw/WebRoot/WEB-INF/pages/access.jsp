@@ -10,6 +10,8 @@
 <html>
 <head>
 <title>coolserver starting page</title>
+
+</style>
 <script type="text/javascript" src="<%=basePath%>js/jquery-2.1.4.js"></script>
 	<script type="text/javascript">
 	$(document).ready(function(){
@@ -21,46 +23,25 @@
 		    });  */
 		    
 		    $('#initServer').click(function (){
+		    	var txt = $('#accesstxt').val();
+		    	if(txt==''){
+		    		alert("秘钥不能为空");
+		    		return;
+		    	}
 		    	$.ajax( {   
 		    	    type : "POST",   
-		    	    url : "<%=path%>/welcome/startServer", 
+		    	    url : "<%=path%>/welcome/access", 
 		    	    data : {
-		    	      'room' : '202',
-		    	      'roomid' :'110'
-		    	     },  
-		    	    dataType: "json",   
-		    	    success : function(data) {   
-/* 		    	        if(data.success){   
-		    	            alert("设置成功！");   
-		    	             
-		    	        }   
-		    	        else{   
-		    	            alert("设置失败！");   
-		    	        }  */
-		    	        alert(data.msg);
-		    	    },   
-		    	    error :function(){   
-		    	        alert("网络连接出错！");   
-		    	    }   
-		    	});   
-		    });
-		    
-		    $('#stopServer').click(function (){
-		    	$.ajax( {   
-		    	    type : "POST",   
-		    	    url : "<%=path%>/welcome/stopServer", 
-		    	    data : {
-		    	      'room' : '202',
-		    	      'roomid' :'110'
+		    	      'access' : txt
 		    	     },  
 		    	    dataType: "json",   
 		    	    success : function(data) {   
 		    	        if(data.success){   
-		    	            alert("设置成功！");   
+		    	            alert("保存成功！");   
 		    	             
 		    	        }   
 		    	        else{   
-		    	            alert("设置失败！");   
+		    	            alert("保存失败！");   
 		    	        }   
 		    	    },   
 		    	    error :function(){   
@@ -68,6 +49,7 @@
 		    	    }   
 		    	});   
 		    });
+
 		});
 	
 	
@@ -80,9 +62,11 @@
 	</div>
 	<div class="row-fluid marginTop active">
 	  <div id="content" style="padding:150px;margin: 40px;">
-	  	<button type="button" class="btn btn-success" id="initServer">start</button>&nbsp;&nbsp;&nbsp;&nbsp;
-		<button type="button" class="btn btn-danger" id="stopServer">stop</button>
-		
+	  	
+	  	<div class="controls">
+      		<input class="input-block-level" type="text" placeholder="输入授权码" id="accesstxt">
+    	</div>
+	  	<button type="button" class="btn btn-success" id="initServer">保存授权码</button>
 	  </div>
 	</div>		
 </body>

@@ -34,6 +34,30 @@ body {
 #content p {
 	line-height: 30px;
 }
+.input-sm {   /* 设置小的输入框input*/
+  height: 30px;
+  padding: 5px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+}
+select.input-sm {   /* 设置小的选择框select*/
+  height: 30px;
+  line-height: 30px;
+}
+textarea.input-sm,
+select[multiple].input-sm { /* 设置小的文本框textarea*/
+  height: auto;
+}
+.input-lg {   /* 设置大的输入框input*/
+  height: 46px;  padding: 10px 16px;  font-size: 18px;  line-height: 1.33; 
+      border-radius: 6px;
+}
+select.input-lg {  height: 46px;  line-height: 46px; /* 设置大的选择框select*/}
+textarea.input-lg,select[multiple].input-lg {  height: auto; /* 设置大的文本框
+    textarea*/}
+
+
 </style>
 
 
@@ -46,9 +70,9 @@ body {
 			<div class='navbar-inner nav-collapse' style="height: auto;">
 				<ul id="myTab" class="nav">
 					<li class="active"><a
-						href="<%=request.getContextPath()%>/welcome/hellow">主页</a></li>
+						href="<%=request.getContextPath()%>/welcome/config">主页</a></li>
 					<li><a href="<%=request.getContextPath()%>/welcome/setting">初始化</a></li>
-					<li><a href="#">其他</a></li>
+					<li><a href="<%=request.getContextPath()%>/welcome/accesspage">授权</a></li>
 				</ul>
 			</div>
 		</div>

@@ -1,23 +1,34 @@
 package com.topda.coolserver;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.omg.CORBA.PRIVATE_MEMBER;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mysql.jdbc.StringUtils;
 import com.topda.common.BWTypeEnum;
+import com.topda.common.Utils;
 import com.topda.cooldevice.MyProtocolHandler;
 import com.topda.dao.MonitorImeiDao;
+import com.topda.dao.MonitorInitDao;
 import com.topda.dao.MonitorTemperatureDao;
 import com.topda.event.DataEvent;
 import com.topda.event.DataListener;
 import com.topda.pojo.MonitorImei;
 import com.topda.pojo.MonitorImeiExample;
+import com.topda.pojo.MonitorInit;
+import com.topda.pojo.MonitorInitExample;
 import com.topda.pojo.MonitorTemperature;
 import com.topda.pojo.MonitorTemperatureExample;
 import com.topda.vo.DeviceTemprature;
@@ -34,6 +45,8 @@ public class CoolServer {
 	private MonitorTemperatureDao monitorTemperatureDao;
 	@Autowired
 	private MonitorImeiDao monitorImeiDao;
+	@Autowired
+	private MonitorInitDao monitorInitDao;
 
 	public MyProtocolHandler getMinaHandler() {
 		return minaHandler;
@@ -43,8 +56,9 @@ public class CoolServer {
 		this.minaHandler = minaHandler;
 	}
 
-	public void registerTemperDataListenr() {
+	public String registerTemperDataListenr() {
 
+		String rtnString="";
 		try {
 			DataListener lis = new DataListener() {
 
@@ -52,10 +66,10 @@ public class CoolServer {
 					Incubator inc = (Incubator) de.getSource();
 
 					if (inc.getType() == BWTypeEnum.TIME.getValue()) {
-						MonitorTemperature mt = new MonitorTemperature();
+/*						MonitorTemperature mt = new MonitorTemperature();
 						mt.setBoxsn(inc.getBoxSn());
 
-						monitorTemperatureDao.insert(mt);
+						monitorTemperatureDao.insert(mt);*/
 					}
 					if (inc.getType() == BWTypeEnum.SIM.getValue()) {
 
@@ -77,6 +91,11 @@ public class CoolServer {
 					if (inc.getType() == BWTypeEnum.TEMP.getValue()) {
 						List<DeviceTemprature> devlst = inc.getDevInfo();
 						for (DeviceTemprature tem : devlst) {
+							
+							if(StringUtils.isNullOrEmpty(tem.getTemperature())){
+								continue;
+							}
+							
 							MonitorTemperatureExample example = new MonitorTemperatureExample();
 							example.createCriteria()
 									.andBoxsnEqualTo(inc.getBoxSn())
@@ -114,15 +133,80 @@ public class CoolServer {
 			};
 			//
 			if (minaHandler.getDataListener() == null) {
-				minaHandler.setDataListener(lis);
-				logger.debug("start succ");
+				if(enc("")){
+					minaHandler.setDataListener(lis);
+					logger.debug("start succ");
+					rtnString = "设置成功";
+									
+				}else {
+					logger.debug("access denied");	
+					rtnString = "请输入正确的授权码";
+				}
+
 			} else {
 				logger.debug("already start succ");
+				rtnString = "请不要重复设置";
 			}
-
 		} catch (Exception e) {
 			logger.error("err:",e);
+			rtnString = "服务器异常，请联系技术人员";
 		}
+		
+		return rtnString;
+	}
+	
+	private boolean enc(String accessString) throws UnknownHostException, ParseException {
+		
+		InetAddress ia;
+		ia = InetAddress.getLocalHost();
+		String mac = Utils.getLocalMac(ia);
+
+		String tmp = mac.replace("-", "我").replace("+", "是")
+				.replace("*", "谁");
+		String code = Utils.GetMD5Code(tmp);
+
+		if(StringUtils.isNullOrEmpty(accessString)){
+			MonitorInitExample example = new MonitorInitExample();
+			
+			List<MonitorInit> lst=monitorInitDao.selectByExample(example);
+			
+			if(lst!=null&&lst.size()>0){
+				MonitorInit init = lst.get(0);
+				accessString = init.getCode();
+				
+			}else {
+				return false;
+			}
+
+		}		
+		return compare(accessString,code);
+	}
+		
+	private boolean compare(String encodeString,String realString) throws ParseException {
+		
+		String real=Utils.convertMD5(encodeString);
+		
+
+		String[] arr = real.split("\\|");
+		if(arr.length!=2)
+			return false;	
+		String access = arr[0];
+		String time = arr[1];
+		
+		DateFormat df = new SimpleDateFormat("yyyyMMdd");
+		Date endDate = df.parse(time);
+		
+		if(endDate.before(new Date())){
+			logger.debug("access expire");
+			return false;
+		}
+		
+		if(!access.equals(realString)){
+			return false;
+		}
+		
+		return true;
+		
 	}
 
 	public void removeTemperDataListenr() {
@@ -134,6 +218,37 @@ public class CoolServer {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public boolean access(String code) {
+
+		boolean isSucc = false;
+		try {
+			MonitorInitExample example = new MonitorInitExample();
+			List<MonitorInit> lst = monitorInitDao.selectByExample(example);
+			
+			int nsucc = 0;
+				
+			if(lst!=null&&lst.size()>0){
+				MonitorInit rec = lst.get(0);
+				rec.setCode(code);
+				nsucc=monitorInitDao.updateByPrimaryKey(rec);
+			}else{
+				MonitorInit record = new MonitorInit();
+				record.setCode(code);
+				nsucc = monitorInitDao.insert(record);
+			}
+
+			if(nsucc>0){
+				logger.debug("access save succ");
+				isSucc = true;
+			}else {
+				logger.debug("access save fail");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return isSucc;
 	}
 
 }
